@@ -38,11 +38,7 @@ export function EnquiryModal({ type, onClose, onSwitchForm }: EnquiryModalProps)
       return
     }
 
-    const apiUrl = import.meta.env.VITE_SUBMISSION_API_URL
-    if (!apiUrl) {
-      setError('Email delivery is not configured yet. Please try again later.')
-      return
-    }
+    const apiUrl = import.meta.env.VITE_SUBMISSION_API_URL || '/api/submit'
 
     const body = {
       type,

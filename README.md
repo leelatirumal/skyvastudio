@@ -34,13 +34,14 @@ browser bundle.
    - `EMAIL_FROM` (optional): a verified sender, for example
      `Skyva Studio <bookings@your-verified-domain.example>`
 4. Deploy the Vercel project and copy its base URL, for example
-   `https://your-project.vercel.app`. The form endpoint is
-   `https://your-project.vercel.app/api/submit`.
-5. In the GitHub repository, open **Settings → Secrets and variables →
-   Actions → Variables** and add `VITE_SUBMISSION_API_URL` with that full
-   endpoint URL. This is a URL, not a secret.
-6. Push a commit to `main` (or rerun the Pages workflow) to rebuild the
-   GitHub Pages site with the endpoint configured.
+   `https://your-project.vercel.app`. On Vercel, the forms use the same-origin
+   `/api/submit` endpoint automatically.
+5. To send submissions from GitHub Pages to Vercel, open the GitHub repository
+   **Settings → Secrets and variables → Actions → Variables** and add
+   `VITE_SUBMISSION_API_URL` with the full endpoint URL,
+   `https://your-project.vercel.app/api/submit`. This is a URL, not a secret.
+6. Push a commit to `main` (or rerun the Pages workflow) to rebuild GitHub
+   Pages with the endpoint configured.
 
 The API accepts requests from the published GitHub Pages origin and local Vite
 development. Submitted names, phone numbers, and appointment details are sent

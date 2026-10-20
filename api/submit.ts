@@ -1,12 +1,21 @@
-import type { IncomingMessage, ServerResponse } from 'node:http'
-
-interface ApiRequest extends IncomingMessage {
+interface ApiRequest {
+  headers: {
+    origin?: string
+    host?: string
+  }
+  method?: string
   body: unknown
 }
 
-interface ApiResponse extends ServerResponse {
+interface ApiResponse {
+  setHeader(name: string, value: string): this
   status(code: number): this
   json(body: unknown): this
+  end(): this
+}
+
+declare const process: {
+  env: Record<string, string | undefined>
 }
 
 interface FormSubmission {
@@ -52,14 +61,25 @@ export default async function handler(req: ApiRequest, res: ApiResponse): Promis
   const origin = req.headers.origin
   res.setHeader('Vary', 'Origin')
 
-  if (!origin || !allowedOrigins.has(origin)) {
+  let isSameOrigin = false
+  if (origin && req.headers.host) {
+    try {
+      isSameOrigin = new URL(origin).host === req.headers.host
+    } catch {
+      isSameOrigin = false
+    }
+  }
+
+  if (!isSameOrigin && (!origin || !allowedOrigins.has(origin))) {
     res.status(403).json({ error: 'Origin is not allowed.' })
     return
   }
 
-  res.setHeader('Access-Control-Allow-Origin', origin)
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+  if (!isSameOrigin && origin) {
+    res.setHeader('Access-Control-Allow-Origin', origin)
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+  }
 
   if (req.method === 'OPTIONS') {
     res.status(204).end()
