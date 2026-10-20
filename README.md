@@ -14,11 +14,39 @@ The React Compiler is not enabled on this template because of its impact on dev 
 ## Enquiries and appointments
 
 The enquiry form opens when the site loads, and visitors can also use the
-**Book appointment** button in the header. Submissions are stored in the
-current browser and an Excel-compatible workbook is downloaded after each
-submission. The workbook contains separate **Enquiries** and **Appointments**
-worksheets. This browser-only setup does not send submissions to a shared
-spreadsheet or to the site owner.
+**Book appointment** button in the header. Successful submissions are emailed
+to the booking contact through the Vercel serverless endpoint and Resend. The
+form API key is stored only in Vercel environment variables, never in the
+browser bundle.
+
+### Enable email delivery
+
+1. Create a Resend account and an API key. For initial testing, Resend's
+   `onboarding@resend.dev` sender can only send to the email address registered
+   with that Resend account. Verify a domain in Resend before using a
+   different sender or recipient.
+2. Import this repository into Vercel. Keep the project root as the repository
+   root and use the Vite framework preset.
+3. In the Vercel project settings, add these environment variables for
+   Production:
+   - `RESEND_API_KEY`: the API key from Resend
+   - `EMAIL_TO`: the destination inbox for form submissions
+   - `EMAIL_FROM` (optional): a verified sender, for example
+     `Skyva Studio <bookings@your-verified-domain.example>`
+4. Deploy the Vercel project and copy its base URL, for example
+   `https://your-project.vercel.app`. The form endpoint is
+   `https://your-project.vercel.app/api/submit`.
+5. In the GitHub repository, open **Settings → Secrets and variables →
+   Actions → Variables** and add `VITE_SUBMISSION_API_URL` with that full
+   endpoint URL. This is a URL, not a secret.
+6. Push a commit to `main` (or rerun the Pages workflow) to rebuild the
+   GitHub Pages site with the endpoint configured.
+
+The API accepts requests from the published GitHub Pages origin and local Vite
+development. Submitted names, phone numbers, and appointment details are sent
+to Vercel and Resend so the email can be delivered. Do not use real customer
+details for testing unless you are comfortable with those providers processing
+them. Do not put the Resend API key in GitHub Pages variables or client code.
 
 ## Expanding the Oxlint configuration
 

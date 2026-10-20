@@ -1,7 +1,7 @@
 const phoneNumber = '+12025550148'
 const displayPhone = '+1 (202) 555-0148'
 const emailAddress = 'hello@skyvastudio.example'
-const address = 'Skyva Studio, Sample Road, Chennai, India'
+const address = 'Skyva Studio,Kokapet, Hyderabad, India'
 
 export function ContactSection() {
   return (
