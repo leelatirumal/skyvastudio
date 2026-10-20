@@ -3,6 +3,6 @@ import { defineConfig } from 'vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/skyvastudio/',
+  base: process.env.GITHUB_PAGES === 'true' ? '/skyvastudio/' : '/',
   plugins: [react()],
 })
